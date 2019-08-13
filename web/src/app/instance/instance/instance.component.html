@@ -1,0 +1,123 @@
+<div class="create-btn">
+  <button mat-icon-button #trigger="matMenuTrigger"
+          [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+    <i class="material-icons mt10">more_vert</i>
+  </button>
+  <mat-menu #menu="matMenu" class="menu-box">
+    <button mat-menu-item (click)="loadImage()">批量拉取镜像</button>
+    <button mat-menu-item (click)="delIns()">删除实例</button>
+    <button mat-menu-item (click)="runContainer()">启动容器</button>
+    <button mat-menu-item (click)="sendCmdToIns()">向实例发布命令</button>
+    <button mat-menu-item (click)="updateHarbor()">同步容器镜像</button>
+    <button mat-menu-item (click)="stopContainer()">批量停止容器</button>
+    <!--<div (click)="$event.stopPropagation()">-->
+      <!--<mat-accordion>-->
+        <!--<mat-expansion-panel class="m-1">-->
+          <!--<mat-expansion-panel-header disabled>-->
+            <!--<mat-panel-title>向容器发布命令</mat-panel-title>-->
+          <!--</mat-expansion-panel-header>-->
+          <!--<form [formGroup]="cmdForm">-->
+            <!--<mat-form-field>-->
+              <!--<input matInput placeholder="请输入命令" formControlName="cmd">-->
+              <!--<mat-error *ngIf="cmdForm.get('cmd').errors && cmdForm.get('cmd').hasError('required')">命令为必填项!</mat-error>-->
+            <!--</mat-form-field>-->
+          <!--</form>-->
+          <!--<button mat-raised-button color="primary" (click)="sendCmd()">创建</button>-->
+        <!--</mat-expansion-panel>-->
+      <!--</mat-accordion>-->
+    <!--</div>-->
+    <!--<button mat-menu-item>更新容器列表</button>-->
+
+    <!--<button mat-menu-item (click)="deleteContainer()">删除容器</button>-->
+    <!--<button mat-menu-item>上传到容器</button>-->
+  </mat-menu>
+</div>
+<div class="card card-table w50">
+  <div class="card-body">
+      <table mat-table [dataSource]="dataSource">
+
+        <!-- Checkbox Column -->
+        <ng-container matColumnDef="checkbox">
+          <th mat-header-cell *matHeaderCellDef>
+            <mat-checkbox (change)="$event ? masterToggle() : null"
+                          [checked]="selection.hasValue() && isAllSelected()"
+                          [indeterminate]="selection.hasValue() && !isAllSelected()">
+            </mat-checkbox>
+          </th>
+          <td mat-cell *matCellDef="let row">
+            <mat-checkbox (click)="$event.stopPropagation()"
+                          (change)="$event ? selection.toggle(row) : null"
+                          [checked]="selection.isSelected(row)">
+            </mat-checkbox>
+          </td>
+        </ng-container>
+
+        <!-- Position Column -->
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef> 实例名称 </th>
+          <td mat-cell *matCellDef="let element"><a [routerLink]="['../container', element.params]"> {{element.name}} </a></td>
+        </ng-container>
+
+        <!-- Name Column -->
+        <ng-container matColumnDef="compose">
+          <th mat-header-cell *matHeaderCellDef> 编排模版 </th>
+          <td mat-cell *matCellDef="let element"> {{element.compose}} </td>
+        </ng-container>
+
+        <!-- Weight Column -->
+        <ng-container matColumnDef="IP">
+          <th mat-header-cell *matHeaderCellDef> IP </th>
+          <td mat-cell *matCellDef="let element">
+            (内){{element.internal_ip}}<br>
+            (外){{element.public_ip}}
+          </td>
+        </ng-container>
+
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="docker">
+          <th mat-header-cell *matHeaderCellDef> 容器 </th>
+          <td mat-cell *matCellDef="let element"> {{element.dockerNumber}} 个 </td>
+        </ng-container>
+
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="system">
+          <th mat-header-cell *matHeaderCellDef> 机型概览 </th>
+          <td mat-cell *matCellDef="let element">
+            <a matTooltip="CPU">{{element.cpu}}</a> |
+            <a matTooltip="RAM">{{element.ram}}</a> |
+            <a matTooltip="CDS">{{element.cds}}</a>
+          </td>
+        </ng-container>
+
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="image">
+          <th mat-header-cell *matHeaderCellDef> 镜像 </th>
+          <td mat-cell *matCellDef="let element">
+            <button mat-button [matMenuTriggerFor]="menu">{{element.imageNum}} 个</button>
+            <mat-menu #menu="matMenu">
+              <button mat-menu-item *ngFor="let item of element.imageList">{{item}}</button>
+            </mat-menu>
+          </td>
+        </ng-container>
+
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="operate">
+          <th mat-header-cell *matHeaderCellDef> 操作 </th>
+          <td mat-cell *matCellDef="let element">
+            <button class="btn btn-space btn-success md-trigger mr-3"
+                    (click)="setEnv(element)"
+                    [disabled]="!element.isUploadImage">设置环境变量</button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+        </tr>
+      </table>
+    <mat-paginator [length]="100"
+                   [pageSize]="10"
+                   [pageSizeOptions]="[5, 10, 25, 100]">
+    </mat-paginator>
+  </div>
+</div>
+

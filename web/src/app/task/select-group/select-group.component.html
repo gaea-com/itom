@@ -1,0 +1,45 @@
+<ng-container [formGroup]="myForm">
+  <div class="row field-row" *ngIf="groupOption.length > 0">
+    <mat-form-field class="col col-6" appearance="outline">
+      <mat-label>请选择实例组</mat-label>
+      <mat-select (selectionChange)="chooseGroup($event)">
+        <mat-option *ngFor="let item of groupOption" [value]="item.id">
+          {{item.name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div class="row" *ngIf="options.length > 0 || selectedOptions.length > 0">
+    <div class="col box" cdkDropListGroup>
+      <div
+        cdkDropList
+        [cdkDropListData]="options"
+        class="col-5 box-left">
+        <div class="box-item" *ngFor="let item of options; index as i" cdkDrag>
+          <mat-checkbox [checked]="todoSelections[i][item.id]"
+                        (click)="$event.stopPropagation()"
+                        (change)="todoSelections[i][item.id] = !todoSelections[i][item.id]">{{item.name}}</mat-checkbox>
+        </div>
+      </div>
+      <div class="col-2 box-middle text-center">
+        <button mat-icon-button color="primary" (click)="addItem()"><mat-icon>arrow_forward</mat-icon></button><br>
+        <button mat-icon-button color="primary" (click)="removeItem()"><mat-icon>arrow_back</mat-icon></button>
+      </div>
+      <div
+        cdkDropList
+        [cdkDropListData]="selectedOptions"
+        class="col-5 box-right"
+        (cdkDropListDropped)="drop($event)">
+        <div class="box-item" *ngFor="let item of selectedOptions; index as i">
+          <mat-checkbox [checked]="doneSelections[i][item.id]"
+                        (click)="$event.stopPropagation()"
+                        (change)="doneSelections[i][item.id] = !doneSelections[i][item.id]">{{item.name}}</mat-checkbox>
+          <button mat-icon-button color="warn" (click)="deleteItem(item)">
+            <mat-icon>delete_forever</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>

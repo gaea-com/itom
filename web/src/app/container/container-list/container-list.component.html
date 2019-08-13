@@ -1,0 +1,142 @@
+<div class="create-btn">
+  <button mat-icon-button #trigger="matMenuTrigger"
+          [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+    <i class="material-icons mt10">more_vert</i>
+  </button>
+  <mat-menu #menu="matMenu" class="menu-box">
+    <button mat-menu-item [disabled]="!cid" (click)="updateContainer()">更新容器列表</button>
+    <button mat-menu-item [disabled]="!cid" (click)="runContainer()">启动容器</button>
+    <button mat-menu-item (click)="closeContainer()">关闭容器</button>
+    <button mat-menu-item (click)="sendCmd()">向容器发布命令</button>
+  </mat-menu>
+</div>
+<div class="card w50">
+  <div class="card-header" *ngIf="server_name">
+    <p>实例：{{server_name}}</p>
+    <!--<mat-slide-toggle [checked]="isShowDeleteDocker" (change)="showDeleteDocker($event)">显示已关闭容器</mat-slide-toggle>-->
+  </div>
+  <div class="card-body card-table">
+    <p [ngClass]="{'header-less-tabs' : !server_name}">
+      <mat-tab-group (selectedTabChange) ="showDeleteDocker($event)"
+                     dynamicHeight>
+        <mat-tab label="容器列表">
+          <table mat-table [dataSource]="dataSource">
+            <!-- Checkbox Column -->
+            <ng-container matColumnDef="checkbox">
+              <th mat-header-cell *matHeaderCellDef>
+                <mat-checkbox (change)="$event ? masterToggle() : null"
+                              [checked]="selection.hasValue() && isAllSelected()"
+                              [indeterminate]="selection.hasValue() && !isAllSelected()">
+                </mat-checkbox>
+              </th>
+              <td mat-cell *matCellDef="let row">
+                <mat-checkbox (click)="$event.stopPropagation()"
+                              (change)="$event ? selection.toggle(row) : null"
+                              [checked]="selection.isSelected(row)">
+                </mat-checkbox>
+              </td>
+            </ng-container>
+
+            <!-- Position Column -->
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef> 名称 </th>
+              <td mat-cell *matCellDef="let element">{{element.name}}</td>
+            </ng-container>
+
+            <!-- Name Column -->
+            <ng-container matColumnDef="description">
+              <th mat-header-cell *matHeaderCellDef> 描述 </th>
+              <td mat-cell *matCellDef="let element"> {{element.description}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="server_name">
+              <th mat-header-cell *matHeaderCellDef> 实例名称 </th>
+              <td mat-cell *matCellDef="let element"> {{element.serverName}} </td>
+            </ng-container>
+
+            <!-- Weight Column -->
+            <ng-container matColumnDef="status">
+              <th mat-header-cell *matHeaderCellDef> 状态 </th>
+              <td mat-cell *matCellDef="let element">
+                {{element.status}}
+              </td>
+            </ng-container>
+
+            <!-- Symbol Column -->
+            <ng-container matColumnDef="IP">
+              <th mat-header-cell *matHeaderCellDef> IP </th>
+              <td mat-cell *matCellDef="let element">
+                {{element.IP}}
+              </td>
+            </ng-container>
+
+            <!-- Symbol Column -->
+            <ng-container matColumnDef="image">
+              <th mat-header-cell *matHeaderCellDef> 镜像 </th>
+              <td mat-cell *matCellDef="let element">{{element.image}}</td>
+            </ng-container>
+
+            <!-- Symbol Column -->
+            <ng-container matColumnDef="operate">
+              <th mat-header-cell *matHeaderCellDef> 操作 </th>
+              <td mat-cell *matCellDef="let element">
+                <button mat-icon-button #trigger="matMenuTrigger"
+                        [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                  <i class="material-icons mt10">more_vert</i>
+                </button>
+                <mat-menu #menu="matMenu" class="menu-box">
+                  <button mat-menu-item (click)="setContainer(element, 'upload')">上传文件</button>
+                  <button mat-menu-item (click)="setContainer(element, 'download')">下载文件</button>
+                  <button mat-menu-item (click)="createTab(element)">webShell</button>
+                </mat-menu>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+            </tr>
+          </table>
+          <mat-paginator [length]="100"
+                         [pageSize]="10"
+                         [pageSizeOptions]="[5, 10, 25, 100]">
+          </mat-paginator>
+        </mat-tab>
+        <mat-tab label="已关闭容器">
+          <table mat-table [dataSource]="dataStopSource">
+            <!-- Position Column -->
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef> 容器名称 </th>
+              <td mat-cell *matCellDef="let element">{{element.name}}</td>
+            </ng-container>
+
+            <!-- Name Column -->
+            <ng-container matColumnDef="closeTime">
+              <th mat-header-cell *matHeaderCellDef> 关闭时间 </th>
+              <td mat-cell *matCellDef="let element"> {{element.closeTime}} </td>
+            </ng-container>
+
+            <!-- Symbol Column -->
+            <ng-container matColumnDef="operate">
+              <th mat-header-cell *matHeaderCellDef> 操作 </th>
+              <td mat-cell *matCellDef="let element">
+                <!--<button mat-icon-button #trigger="matMenuTrigger"-->
+                <!--[matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">-->
+                <!--<i class="material-icons mt10">more_vert</i>-->
+                <!--</button>-->
+                <!--<mat-menu #menu="matMenu" class="menu-box">-->
+                <!--<button mat-menu-item (click)="setContainer(element, 'upload')">上传文件</button>-->
+                <!--<button mat-menu-item (click)="setContainer(element, 'download')">下载文件</button>-->
+                <!--<button mat-menu-item (click)="createTab(element)">webShell</button>-->
+                <!--</mat-menu>-->
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedStopColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedStopColumns;"></tr>
+          </table>
+
+        </mat-tab>
+      </mat-tab-group>
+    </p>
+  </div>
+</div>

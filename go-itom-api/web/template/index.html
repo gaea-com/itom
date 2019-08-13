@@ -1,0 +1,113 @@
+<html lang="">
+    <head>
+        <link rel="stylesheet" href="static/xterm.css" />
+        <!--<link rel="stylesheet" href="static/fullscreen.css" />-->
+        <link rel="stylesheet" href="static/bootstrap.min.css" />
+        <script src="static/xterm.js"></script>
+        <!-- <script src="static/fullscreen.js"></script>-->
+        <script src="static/jquery.min.js"></script>
+        <script src="static/bootstrap.min.js"></script>
+        <style>
+            body {
+                color: #111;
+                margin: 20px;
+            }
+
+            #terminal-container {
+                margin: 0 auto;
+            }
+            #connect {
+                margin: 0 auto;
+            }
+            #terminal-container a {
+                color: #fff;
+            }
+            .panel-body{
+                background-color: #000;
+            }
+        </style>
+        <title>webshell 测试页</title>
+    </head>
+    <body>
+
+        <form class="form-inline">
+            <div class="form-group">
+                <label for="">宿主机IP</label>
+                <input type="text" class="form-control" name="h" placeholder="宿主机 IP" value="192.168.131.185"></div>
+            <div class="form-group">
+                <label for="">DOCKER端口</label>
+                <input type="text" class="form-control" name="p" placeholder="2375" value="2375"></div>
+            <div class="form-group">
+                <label for="">容器ID</label>
+                <input type="text" class="form-control" name="containers_id" placeholder="容器ID" value="2560b9b0519b"></div>
+            <div class="form-group">
+                <label for="">连接容器命令</label>
+                <input type="text" class="form-control" name="cmd" placeholder="连接容器命令" value="/bin/sh"></div>
+            <button type="button" class="btn btn-default" onclick="ws_connect()" id="connect_container">连接</button>
+            <button type="button" class="btn btn-default" onclick="ws_close()" id="drop_container" style="display:none">断开</button>
+        </form>
+        <div class="panel panel-default">
+            <div class="panel-heading">控制台</div>
+            <div class="panel-body">
+                <div id="terminal-container"></div>
+            </div>
+        </div>
+        <script>
+            //获取主机 端口
+            hostname=location.hostname;
+            port=location.port;
+
+            console.log(document.body.clientWidth);
+            cols=parseInt(document.body.clientWidth /9);
+            rows=parseInt(document.body.clientHeight / 25);
+            let socket;
+            const term = new Terminal({
+                "cursorBlink": true,
+                "rows": rows,
+                "cols": cols,
+            });
+
+            function ws_connect(){
+                $("#connect_container").hide();
+                $("#drop_container").show();
+                h=$("input[name=h]").val();
+                p=$("input[name=p]").val();
+                cmd=$("input[name=cmd]").val();
+                containers_id=$("input[name=containers_id]").val();
+                console.log(h,p,containers_id);
+                if( h === "" || p === "" || containers_id === "" || cmd === ""){
+                    alert("不能为空!");
+                    return false
+                }
+                container = document.getElementById('terminal-container');
+                url = 'ws://'+hostname+':'+port+'/ws?target_ip='+h+'&cmd='+cmd+'&target_port='+p+'&container_id='+containers_id+'&rows='+rows+'&cols='+cols;
+                socket = new WebSocket(url);
+                $("#terminal-container").html("");
+                term.open(document.getElementById('terminal-container'));
+                console.log(term);
+                //term.toggleFullscreen(true);
+
+                term.on('data', function (data) {
+                    socket.send(data);
+                });
+
+                socket.onmessage = function (e) {
+                    term.write(e.data);
+                    console.log(e.data);
+                };
+
+                socket.onclose = function (e) {
+                    term.write("[session is close]==>" + e.data);
+                    $("#connect_container").show();
+                    $("#drop_container").hide()
+                }
+            }
+
+            function ws_close(){
+                socket.close();
+                $("#connect_container").show();
+                $("#drop_container").hide()
+            }
+        </script>
+    </body>
+</html>

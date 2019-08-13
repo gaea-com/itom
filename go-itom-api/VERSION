@@ -1,0 +1,5 @@
+1.0.1
+- 修复 container_list 返回为空的问题
+- container_create 返回的 response 中增加 image_name 字段
+
+1.0.0

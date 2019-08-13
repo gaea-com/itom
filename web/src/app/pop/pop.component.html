@@ -1,0 +1,27 @@
+<h2 mat-dialog-title>
+  {{header}}
+  <button mat-mini-fab mat-dialog-close class="float-right" color="accent">关闭</button>
+</h2>
+<mat-dialog-content>
+  <h5>{{title}}</h5>
+  <div [ngSwitch]="type">
+    <ul *ngSwitchCase="'deleteServer'" class="pop-list">
+      <li>
+        <span class="col1">实例名称</span>
+        <span class="col2">运行容器个数</span>
+      </li>
+      <li *ngFor="let id of ids; index as i;">
+        <span class="col1">{{name[i]}}</span>
+        <span class="col2">{{data.dockerNum[id]}}</span>
+      </li>
+    </ul>
+    <ul *ngSwitchDefault>
+      <li *ngFor="let item of name">{{item}}</li>
+    </ul>
+  </div>
+
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-raised-button color="primary" type="submit" (click)="confirm()">确认</button>
+</mat-dialog-actions>

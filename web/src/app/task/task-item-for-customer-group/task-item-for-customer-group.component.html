@@ -1,0 +1,13 @@
+<ng-container [formGroup]="myForm">
+  <p class="notice col" *ngIf="scriptOption.length == 0">暂无自定义组，立即<a [routerLink]="[url, params]">创建自定义组</a></p>
+  <div class="col field-row">
+    <mat-form-field class="col-6" appearance="outline">
+      <mat-label>请选择自定义组</mat-label>
+      <mat-select formControlName="result">
+        <mat-option *ngFor="let item of scriptOption" [value]="item">
+          {{item.name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+</ng-container>

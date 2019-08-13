@@ -1,0 +1,45 @@
+<div class="card">
+  <div class="card-header console-header">
+    Console
+    <button mat-icon-button #trigger="matMenuTrigger"
+            [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+      <i class="material-icons mt10">more_vert</i>
+    </button>
+    <mat-menu #menu="matMenu" class="menu-box">
+      <button mat-icon-button (click)="group('group')" [disabled]="isGroup" matTooltip="分组"><mat-icon>format_list_bulleted</mat-icon></button>
+      <button mat-icon-button (click)="group('time')" [disabled]="!isGroup" matTooltip="时序"><mat-icon>format_line_spacing</mat-icon></button>
+      <button mat-icon-button (click)="sort('des')" [disabled]="isGroup || !isDes" matTooltip="按时间降序"><mat-icon>vertical_align_bottom</mat-icon></button>
+      <button mat-icon-button (click)="sort('asc')" [disabled]="isGroup || isDes" matTooltip="按时间升序"><mat-icon>vertical_align_top</mat-icon></button>
+      <button mat-icon-button (click)="delete()"><mat-icon>delete</mat-icon></button>
+    </mat-menu>
+
+    <button mat-stroked-button color="primary" class="float-right close-btn" (click)="close($event)">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div class="card-body" [ngClass]="{'white-bg': isGroup, 'black-bg': !isGroup}">
+    <div class="console-body" *ngIf="!isGroup">
+      <div class="item" *ngFor="let msg of messageListStatus | async; index as i">
+        <p *ngIf="!msg.line">
+          <B>{{msg.eventName}}:</B>
+          <span class="status" [ngClass]="{'success': msg.statusCode == 200, 'error': msg.statusCode != 200 }">{{msg.status}}</span>
+          [{{msg.ID}}] {{msg.msg}}
+          <a (click)="checkLog(msg)" *ngIf="msg.isShowButton" class="refresh">查看详情</a>
+        </p>
+        <p *ngIf="msg.line" class="text-center">-------->上次浏览到这里<---------</p>
+      </div>
+    </div>
+    <div *ngIf="isGroup">
+      <div *ngFor="let id of messageIDArray; index as i">
+        <mat-accordion>
+          <mat-expansion-panel class="group-item">
+            <mat-expansion-panel-header class="group-item-header">{{messageHash[id][0]['event']}} | {{id}}</mat-expansion-panel-header>
+            <div class="item" *ngFor="let msg of messageHash[id]; index as i">
+              <p><B>{{msg.event}}:</B> <span class="status">{{msg.status}}</span> [{{msg.ID}}] {{msg.msg}} </p>
+            </div>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </div>
+    </div>
+  </div>
+</div>

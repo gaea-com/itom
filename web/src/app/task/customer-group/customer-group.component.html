@@ -1,0 +1,53 @@
+<div class="create-btn">
+  <a class="btn btn-space btn-primary md-trigger mr-3" [routerLink]="['../createCustomerGroup', insParams]">创建实例组</a>
+  <a class="btn btn-space btn-primary md-trigger" [routerLink]="['../createCustomerGroup', dockerParams]">创建容器组</a>
+</div>
+<div class="card card-table w50">
+  <table mat-table [dataSource]="dataSource">
+    <!-- Position Column -->
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef> 名称 </th>
+      <td mat-cell *matCellDef="let element">{{element.name}}</td>
+    </ng-container>
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="description">
+      <th mat-header-cell *matHeaderCellDef> 描述 </th>
+      <td mat-cell *matCellDef="let element"> {{element.description}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="type">
+      <th mat-header-cell *matHeaderCellDef> 类型 </th>
+      <td mat-cell *matCellDef="let element"> {{element.type}} </td>
+    </ng-container>
+
+    <!-- Weight Column -->
+    <ng-container matColumnDef="num">
+      <th mat-header-cell *matHeaderCellDef> 数量 </th>
+      <td mat-cell *matCellDef="let element">
+        {{element.num}}
+      </td>
+    </ng-container>
+
+    <!-- Symbol Column -->
+    <ng-container matColumnDef="operate">
+      <th mat-header-cell *matHeaderCellDef> 操作 </th>
+      <td mat-cell *matCellDef="let element">
+        <a class="btn text-primary" [routerLink]="['../createCustomerGroup', element.params]"><mat-icon class="vm">border_color</mat-icon></a>
+        <button mat-icon-button color="primary" (click)="delete(element)"><mat-icon>delete</mat-icon></button>
+        <button mat-icon-button color="primary"
+                *ngIf="element.typeCode == 200"
+                matTooltip="暂停容器"
+                (click)="pause(element)"><mat-icon>pause</mat-icon></button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+    </tr>
+  </table>
+  <mat-paginator [length]="100"
+                 [pageSize]="10"
+                 [pageSizeOptions]="[5, 10, 25, 100]">
+  </mat-paginator>
+</div>

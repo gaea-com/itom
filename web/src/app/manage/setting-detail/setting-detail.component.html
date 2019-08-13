@@ -1,0 +1,8 @@
+<div class="ml-3">
+  <div *ngFor="let tag of tagList; index as i;" class="tag-item">
+    <mat-icon class="vb">arrow_right</mat-icon>
+    {{tag.tag}}
+    <mat-icon class="vb delete-btn float-right" (click)="delete(tag)">close</mat-icon>
+  </div>
+</div>
+

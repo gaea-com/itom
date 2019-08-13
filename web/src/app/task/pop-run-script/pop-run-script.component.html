@@ -1,0 +1,112 @@
+<h2 mat-dialog-title>
+  运行命令
+  <button mat-mini-fab mat-dialog-close class="float-right" color="accent">
+    <i class="material-icons mt0">close</i>
+  </button>
+</h2>
+<mat-dialog-content>
+  <div class="card p-3">
+    <form class="pop" [formGroup]="myForm">
+      <div class="row">
+        <mat-accordion class="col">
+          <mat-expansion-panel class="no-shadow">
+            <mat-expansion-panel-header class="script-title">
+              <mat-panel-title class="script-header">
+                命令：{{scriptName}}
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <pre>{{script}}</pre>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </div>
+      <div class="row" *ngIf="type == 200">
+        <div class="col mt-3">
+          <mat-radio-group aria-label="Select an option" class="script-header" formControlName="targetType">
+            <mat-radio-button value=1 class="mr-3">选择实例</mat-radio-button>
+            <mat-radio-button value=2>选择自定义实例组</mat-radio-button>
+          </mat-radio-group>
+        </div>
+      </div>
+
+      <div class="row" *ngIf="myForm.get('targetType').value == 1">
+        <mat-form-field class="example-chip-list col">
+          <mat-chip-list #chipList aria-label="Instance selection">
+            <mat-chip *ngFor="let instanceItem of instanceArr" [selectable]="selectable"
+                      [removable]="removable" (removed)="remove(instanceItem, 'ins')">
+              {{instanceItem.name}}
+              <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+            </mat-chip>
+            <input placeholder="请选择实例"
+                   #instanceInput
+                   formControlName="instance"
+                   [matAutocomplete]="instanceAuto"
+                   [matChipInputFor]="chipList">
+            <mat-autocomplete #instanceAuto="matAutocomplete" (optionSelected)="selectedInstance($event)">
+              <mat-option *ngFor="let item of instanceOptionStatus | async" [value]="item">
+                {{item.name}}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-chip-list>
+        </mat-form-field>
+      </div>
+
+      <div class="row" *ngIf="myForm.get('targetType').value == 2">
+        <h3 class="col col-12 notice" *ngIf="instanceGroupOption.length == 0">暂时没有自定义实例组，<a (click)="link(100)">创建一个</a></h3>
+        <mat-form-field class="col">
+          <mat-label>请选择自定义实例组</mat-label>
+          <mat-select formControlName="instanceGroup">
+            <mat-option *ngFor="let item of instanceGroupOption" [value]="item.id">
+              {{item.name}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="row" *ngIf="type == 100">
+        <div class="col mt-3">
+          <mat-radio-group aria-label="Select an option" class="script-header" formControlName="targetType">
+            <mat-radio-button value=3 class="mr-3">选择容器</mat-radio-button>
+            <mat-radio-button value=4>选择自定义容器组</mat-radio-button>
+          </mat-radio-group>
+        </div>
+      </div>
+
+      <div class="row" *ngIf="myForm.get('targetType').value == 3">
+        <mat-form-field class="example-chip-list col">
+          <mat-chip-list #dockerChipList aria-label="Docker selection">
+            <mat-chip *ngFor="let dockerItem of dockerArr" [selectable]="selectable"
+                      [removable]="removable" (removed)="remove(dockerItem, 'docker')">
+              {{dockerItem.name}}
+              <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+            </mat-chip>
+            <input placeholder="请选择容器"
+                   #dockerInput
+                   formControlName="container"
+                   [matAutocomplete]="dockerAuto"
+                   [matChipInputFor]="dockerChipList">
+            <mat-autocomplete #dockerAuto="matAutocomplete" (optionSelected)="selectedDocker($event)">
+              <mat-option *ngFor="let item of dockerOptionStatus | async" [value]="item">
+                {{item.name}}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-chip-list>
+        </mat-form-field>
+      </div>
+
+      <div class="row" *ngIf="myForm.get('targetType').value == 4">
+        <h3 class="col col-12 notice" *ngIf="dockerGroupOption.length == 0">暂时没有自定义容器组，<a (click)="link(200)">创建一个</a></h3>
+        <mat-form-field class="col">
+          <mat-label>请选择自定义容器组</mat-label>
+          <mat-select formControlName="containerGroup">
+            <mat-option *ngFor="let item of dockerGroupOption" [value]="item.id">
+              {{item.name}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </form>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-raised-button color="primary" (click)="submitForm()">运行</button>
+</mat-dialog-actions>

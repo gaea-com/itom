@@ -1,0 +1,102 @@
+<mat-sidenav-container class="example-container">
+  <mat-sidenav #sidenav mode="side" [(opened)]="opened" class="left-sidebar">
+    <ul class="nav-index">
+      <li class="project-name">{{projectName}}</li>
+      <li [ngClass]="getClass('topology')">
+        <a [routerLink]="['topology']">
+          <i class="material-icons vt">arrow_right</i>
+          拓扑图
+        </a>
+      </li>
+      <li [ngClass]="getClass('compose')">
+        <a [routerLink]="['compose']">
+          <i class="material-icons vt">arrow_right</i>
+          编排模版
+        </a>
+      </li>
+      <li [ngClass]="getClass('instance')">
+        <a [routerLink]="['instance']">
+          <i class="material-icons vt">arrow_right</i>
+          实例管理
+        </a>
+      </li>
+      <li [ngClass]="getClass('container')">
+        <a [routerLink]="['container']">
+          <i class="material-icons vt">arrow_right</i>
+          容器管理
+        </a>
+      </li>
+      <li>
+        <mat-accordion>
+          <mat-expansion-panel class="nav-expend">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <i class="material-icons vt">arrow_right</i>
+                命令&任务管理
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <ul class="child-box">
+              <li [ngClass]="getClass('script')">
+                <a [routerLink]="['script']">
+                <i class="material-icons vt">looks_one</i>
+                命令管理
+                </a>
+              </li>
+              <li [ngClass]="getClass('customerGroup')">
+                <a [routerLink]="['customerGroup']">
+                <i class="material-icons vt">looks_two</i>
+                自定义组管理
+                </a>
+              </li>
+              <li [ngClass]="getClass('task')">
+                <a [routerLink]="['task']">
+                <i class="material-icons vt">looks_3</i>
+                任务管理
+                </a>
+              </li>
+              <li [ngClass]="getClass('cronJob')">
+                <a [routerLink]="['cronJob']">
+                <i class="material-icons vt">looks_4</i>
+                定时任务
+                </a>
+              </li>
+            </ul>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </li>
+      <li [ngClass]="getClass('log')">
+        <a [routerLink]="['log']">
+          <i class="material-icons vt">arrow_right</i>
+          操作日志
+        </a>
+      </li>
+      <li class="col-end">
+        <button *ngIf="opened" class="side-btn ml-lg-1" (click)="sideBar()">
+          <i class="material-icons">first_page</i>
+        </button>
+      </li>
+    </ul>
+  </mat-sidenav>
+
+  <mat-sidenav-content class="example-content">
+    <button *ngIf="!opened" class="side-btn side-btn-right" (click)="sideBar()">
+      <i class="material-icons">last_page</i>
+    </button>
+    <div class="page-head">
+      <h2 class="page-head-title">{{title}}</h2>
+      <nav aria-label="breadcrumb" role="navigation">
+        <ol class="breadcrumb page-head-nav">
+          <li class="breadcrumb-item"><a [routerLink]="['/']">Home</a></li>
+          <li class="breadcrumb-item"><a [routerLink]="['/home/index/projectList']">{{projectName}}</a></li>
+          <li class="breadcrumb-item" *ngFor="let item of breadcrumbs">
+            <a [routerLink]="item.link" >{{item.title}}</a>
+          </li>
+        </ol>
+      </nav>
+    </div>
+    <div class="main-content container-fluid">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+

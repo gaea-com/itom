@@ -1,0 +1,26 @@
+<h2 mat-dialog-title class="pop-head">
+  创建实例组
+  <button mat-mini-fab mat-dialog-close class="float-right" color="accent">
+    <i class="material-icons mt0">close</i>
+  </button>
+</h2>
+<mat-dialog-content>
+<form [formGroup]="myForm">
+  <div class="field-row row">
+    <mat-form-field appearance="outline" class="col col-6">
+      <input matInput placeholder="实例组名称" formControlName="name" autocomplete="off">
+      <mat-error *ngIf="myForm.get('name').errors && myForm.get('name').hasError('required')">实例组名称为必填项!</mat-error>
+    </mat-form-field>
+  </div>
+  <div class="field-row row row-group">
+    <mat-radio-group aria-label="Select an option"  class="col col-6" formControlName="type">
+      <mat-radio-button value="200" class="mr-3">可复制</mat-radio-button>
+      <mat-radio-button value="100">不可复制</mat-radio-button>
+    </mat-radio-group>
+  </div>
+</form>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-raised-button color="primary" type="submit" (click)="confirm()">创建</button>
+</mat-dialog-actions>

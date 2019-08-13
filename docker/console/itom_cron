@@ -1,0 +1,5 @@
+* * * * * /usr/local/bin/php /app/cli.php task index >> /app/script/log/task.log 2>&1
+0 1 * * * /usr/local/bin/php /app/cli.php logdata export > /dev/null 2>&1
+#* * * * * /usr/local/bin/php /app/cli.php task index >> /app/script/log/task.log 2>&1
+#0 1 * * * /usr/local/bin/php /app/cli.php logdata export > /dev/null 2>&1
+#* * * * * /usr/local/bin/php /app/cli.php buildimage index >> /app/script/log/buildimagetask.log 2>&1

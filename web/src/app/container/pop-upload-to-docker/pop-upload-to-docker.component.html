@@ -1,0 +1,31 @@
+<h2 mat-dialog-title>
+  {{title}}
+  <button mat-mini-fab mat-dialog-close class="float-right" color="accent">
+    <mat-icon>close</mat-icon>
+  </button>
+</h2>
+<mat-dialog-content>
+  <div class="p-3">
+    <form class="pop" [formGroup]="fileForm">
+      <div class="file-input" *ngIf="type == 'upload'">
+        <input #File class="none" id="input-file-id" multiple type="file" (change)="chooseFile()"/>
+        <mat-form-field class="w-75">
+          <input matInput placeholder="请选择文件"
+                 formControlName="file"
+                 readonly>
+        </mat-form-field>
+        <label for="input-file-id" class="mat-mini-fab" (click)="chooseFile()">
+          <i class="material-icons mt7">folder</i>
+        </label>
+      </div>
+      <mat-form-field>
+        <input matInput placeholder="请输入文件{{action}}路径" formControlName="path">
+        <mat-error *ngIf="fileForm.get('path').errors && fileForm.get('path').hasError('required')">文件{{action}}路径为必填项!</mat-error>
+      </mat-form-field>
+      <mat-progress-bar mode="determinate" value="{{uploadProgress}}" class="mt35" *ngIf="uploadingProgressing"></mat-progress-bar>
+    </form>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-raised-button color="primary" (click)="submitForm()">{{type}}</button>
+</mat-dialog-actions>

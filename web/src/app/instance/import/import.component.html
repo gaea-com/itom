@@ -1,0 +1,24 @@
+<h2 mat-dialog-title class="pop-head">
+  导入实例
+  <button mat-mini-fab mat-dialog-close class="float-right" color="accent"><i class="material-icons mt0">close</i></button>
+</h2>
+<mat-dialog-content>
+  <form class="pop" [formGroup]="myForm">
+    <div class="file-input">
+      <input #File class="none" id="input-file-id" multiple type="file" accept=".csv" (change)="chooseFile()"/>
+      <mat-form-field class="w-75">
+        <input matInput placeholder="请选择文件导入实例"
+               formControlName="choose_file"
+               readonly >
+      </mat-form-field>
+      <label for="input-file-id" class="mat-mini-fab" (click)="chooseFile()">
+        <i class="material-icons mt7">folder</i>
+      </label>
+    </div>
+    <mat-progress-bar mode="determinate" value="{{uploadProgress}}" class="mt35" *ngIf="uploadingProgressing"></mat-progress-bar>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-raised-button color="primary" type="submit" (click)="confirm()">创建</button>
+</mat-dialog-actions>

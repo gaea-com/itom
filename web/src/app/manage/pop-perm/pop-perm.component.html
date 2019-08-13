@@ -1,0 +1,25 @@
+<h2 mat-dialog-title class="pop-head">
+  项目授权
+  <button mat-mini-fab mat-dialog-close class="float-right" color="accent">
+    <mat-icon>close</mat-icon>
+  </button>
+</h2>
+<mat-dialog-content>
+  <div class="card p-3">
+    <form [formGroup]="myForm">
+      <div class="row">
+        <mat-form-field class="col col-6">
+          <mat-label>选择用户</mat-label>
+          <mat-select formControlName="user" multiple>
+            <mat-option *ngFor="let user of userList" [value]="user">
+              {{user.name}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <div class="col col-6">
+          <button mat-raised-button color="primary" (click)="confirm()">提交</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</mat-dialog-content>

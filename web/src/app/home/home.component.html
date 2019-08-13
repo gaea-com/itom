@@ -1,0 +1,26 @@
+<nav class="navbar navbar-expand fixed-top be-top-header">
+  <div class="container-fluid">
+    <div class="be-nav-header logo">
+      <img src="assets/logo-img.png">
+    </div>
+    <div class="nav-header">
+      <div class="float-right user-btn">
+        <button mat-icon-button #trigger="matMenuTrigger" class="float-right"
+                [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+          <i class="material-icons mt10 big-face">face</i>
+        </button>
+        <mat-menu #menu="matMenu" class="menu-box">
+          <button mat-menu-item (click)="logout()">退出登录</button>
+          <button mat-menu-item (click)="modifyPassword()">修改密码</button>
+        </mat-menu>
+      </div>
+      <p (click)="getBottom()" class="float-right text-primary chat-btn"
+         matBadge="{{msgNum}}" matBadgePosition="before" matBadgeColor="accent">
+        <i class="material-icons">chat_bubble_outline</i>
+      </p>
+    </div>
+  </div>
+</nav>
+<div class="wrapper">
+  <router-outlet></router-outlet>
+</div>

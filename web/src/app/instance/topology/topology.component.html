@@ -1,0 +1,46 @@
+<div class="create-btn">
+  <mat-button-toggle-group #group="matButtonToggleGroup" (change)="toggleGroup($event)">
+    <mat-button-toggle value="true" class="toggle-btn" [checked]="iconStatus == true">
+      <i class="material-icons">fullscreen</i>
+    </mat-button-toggle>
+    <mat-button-toggle value="false" [checked]="iconStatus == false">
+      <i class="material-icons">fullscreen_exit</i>
+    </mat-button-toggle>
+    <button mat-icon-button #trigger="matMenuTrigger"
+            [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+      <i class="material-icons mt10">more_vert</i>
+    </button>
+    <mat-menu #menu="matMenu" class="menu-box">
+      <div (click)="$event.stopPropagation()">
+        <app-drop-menu [pid]="pid" (getValue)="getValue($event)"></app-drop-menu>
+      </div>
+    </mat-menu>
+  </mat-button-toggle-group>
+</div>
+<div class="card w50">
+  <div class="card-body">
+    <p *ngIf="groupIds.length == 0" class="notice">暂无导入实例，请导入！</p>
+    <mat-progress-bar mode="indeterminate" *ngIf="!isShowTable"></mat-progress-bar>
+    <mat-accordion #myaccordion="matAccordion" multi="true" *ngIf="isShowTable">
+      <ng-container *ngFor="let id of groupIds; index as i;">
+        <mat-expansion-panel class="custom-header m-3"
+                             [expanded]="groupList[id]['iconStatus']" hideToggle disabled>
+          <mat-expansion-panel-header class="topo-list">
+            <mat-panel-description>
+              <button mat-icon-button *ngIf="!groupList[id]['iconStatus']" (click)="toggleExpanded(id)">
+                <i class="material-icons">arrow_right</i>
+              </button>
+              <button mat-icon-button *ngIf="groupList[id]['iconStatus']" (click)="toggleExpanded(id)">
+                <i class="material-icons">arrow_drop_down</i>
+              </button>
+              <span class="lh40">{{groupList[id]['name']}}</span>
+            </mat-panel-description>
+            <button mat-icon-button (click)="linkGroup(id)" *ngIf="id != 0"><i class="material-icons">link</i></button>
+            <button mat-icon-button (click)="delGroup(id)" *ngIf="id"><i class="material-icons">close</i></button>
+          </mat-expansion-panel-header>
+              <app-topology-table [data]="instanceList[id]" [id]="id"></app-topology-table>
+        </mat-expansion-panel>
+      </ng-container>
+    </mat-accordion>
+  </div>
+</div>

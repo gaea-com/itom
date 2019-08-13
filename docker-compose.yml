@@ -1,0 +1,220 @@
+version: '3'
+services:
+  #itom 消息队列 rabbitmq server
+  rabbitmq:
+    image: itom_public_rabbitmq:v1.0
+    container_name: itom_public_mq
+    build:
+      context: .
+      dockerfile: ./docker/mq/Dockerfile
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin
+    #ports:
+    #  - "5672:5672"
+    #  - "15672:15672"  #mq的UI访问port
+    restart: always
+
+  #itom 数据库maraidb
+  db:
+    image: itom_public_db:v1.0
+    container_name: itom_public_db
+    build:
+      context: .
+      dockerfile: ./docker/db/Dockerfile
+    #ports:
+    #  - "3308:3306"
+    volumes:
+      - ./docker/db/data:/var/lib/mysql:rw  #数据保存目录，如果要做持久化，请自定义目录
+      #- ./docker/db/etc:/etc/mysql:ro # 自定义配置文件
+      - ./docker/db/log:/var/log/mysql:rw   #日志保存目录，如果做持久化，请自定义目录
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: itom
+      MYSQL_USER: itom
+      MYSQL_PASSWORD: 123456
+    restart: always
+    command: "--character-set-server=utf8"
+
+  #itom 前端包括nginx用于转发php-fpm以及前端代理
+  web:
+    image: itom_pubulic_web:v1.0
+    container_name: itom_public_web
+    build:
+      context: .
+      dockerfile: ./docker/nginx/Dockerfile
+    depends_on:
+      - php
+    ports:
+      - "8088:8088" #php itom-api请求端口
+      - "80:80"     #web前端http请求端口
+      - "443:443"   #web前端https请求端口
+    volumes:
+      - ./web:/app/web:rw
+      - ./docker/nginx/etc/conf.d:/etc/nginx/conf.d
+      - ./docker/nginx/etc/nginx.conf:/etc/nginx/nginx.conf:ro
+    restart: always
+    command: nginx -g 'daemon off;'
+
+  #itom 缓存以及异步交互队列redis
+  redis:
+    image: itom_public_redis:v1.0
+    container_name: itom_public_redis
+    build:
+      context: .
+      dockerfile: ./docker/redis/Dockerfile
+    #请在./docker/redis/etc/redis.conf中的requirepass中设置密码，本conf初始密码是gaea123456
+    #ports:
+    #  - "6378:6379"
+    volumes:
+      - ./docker/redis/data:/data:rw
+    restart: always
+
+  #itom websocket server
+  wsserver:
+    image: itom_public_ws:v1.0
+    container_name: itom_public_ws
+    build:
+      context: .
+      dockerfile: ./docker/ws/Dockerfile
+    depends_on:
+      - redis
+    ports:
+      - "9501:9501"
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_AUTH: gaea123456
+      WS_SERVER_PORT: 9501
+    restart: always
+    command: php websocket.php
+
+  #itom 业务逻辑异步任务处理脚本，通过监听rabbitmq，多个执行脚本包括crontab job
+  console:
+    image: itom_publci_console:v1.0
+    container_name: itom_public_console
+    build:
+      context: .
+      dockerfile: ./docker/console/Dockerfile
+    volumes:
+      - ./app:/app:rw
+      - ./upload:/upload:rw
+    depends_on:
+      - redis
+      - rabbitmq
+    environment:
+      #redis的配置
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_AUTH: gaea123456
+      #websocket port
+      WS_SERVER_HOST: wsserver
+      WS_SERVER_PORT: 9501
+      #db的配置
+      DB_HOST: db
+      DB_NAME: itom
+      DB_USER: itom
+      DB_PASSWD: 123456
+      #mq的配置
+      MQ_HOST: rabbitmq
+      MQ_PORT: 5672
+      MQ_USER: admin
+      MQ_PASS: admin
+      #dockerApiURL
+      DOCKER_API_HOST: go-itomapi
+      DOCKER_API_PORT: 8000
+    restart: always
+
+  #为前端request做业务逻辑的php-fpm
+  #从安全性考虑，登录机制是json web token，应该修改其密钥，位置在app/api/application/models/JsonWebToken.php SECRET=xxxxx
+  php:
+    image: itom_public_php:v1.0
+    container_name: itom_public_php
+    build:
+      context: .
+      dockerfile: ./docker/php/Dockerfile
+    depends_on:
+      - db
+      - redis
+      - wsserver
+      - rabbitmq
+    environment:
+          #redis的配置
+          REDIS_HOST: redis
+          REDIS_PORT: 6379
+          REDIS_AUTH: gaea123456
+          #websocket
+          WS_SERVER_HOST: wsserver
+          WS_SERVER_PORT: 9501
+          #db的配置
+          DB_HOST: db
+          DB_NAME: itom
+          DB_USER: itom
+          DB_PASSWD: 123456
+          #mq的配置
+          MQ_HOST: rabbitmq
+          MQ_PORT: 5672
+          MQ_USER: admin
+          MQ_PASS: admin
+          #dockerApiURL
+          DOCKER_API_HOST: go-itomapi
+          DOCKER_API_PORT: 8000
+    volumes:
+      - ./app:/app/itom:rw
+      - ./upload:/upload:rw
+    #      - ./docker/php/etc:/usr/local/etc:ro
+    restart: always
+    command: php-fpm
+
+  #python-itomtask server
+  python-itomtask:
+    image: python-itomtask:v1
+    container_name: python-itomtask
+    build:
+      context: .
+      dockerfile: ./python-itom-task/Dockerfile
+    volumes:
+      - ./python-itom-task/conf/ssh_key:/app/conf/ssh_key:ro
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_DB: 0
+      REDIS_PASSWORD: gaea123456
+      ANSIBLE_SSH_USER: root
+    depends_on:
+      - redis
+    restart: always
+
+  #go-itomapi server docker API
+  go-itomapi:
+    image: go-itomapi:v1
+    container_name: go-itomapi
+    build:
+      context: .
+      dockerfile: ./go-itom-api/deployments/itomapi/Dockerfile
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_DB: 0
+      REDIS_PASSWORD: gaea123456
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+    restart: always
+
+  #go-itomtask server
+  go-itomtask:
+    image: go-itomtask:v1
+    container_name: go-itomtask
+    build:
+      context: .
+      dockerfile: ./go-itom-api/deployments/itomtask/Dockerfile
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_DB: 0
+      REDIS_PASSWORD: gaea123456
+    depends_on:
+      - redis
+    restart: always

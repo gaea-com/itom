@@ -1,0 +1,36 @@
+<h2 mat-dialog-title class="pop-head">
+  关联实例
+  <button mat-mini-fab mat-dialog-close class="float-right" color="accent">
+    <i class="material-icons mt0">close</i>
+  </button>
+</h2>
+<mat-dialog-content>
+  <form [formGroup]="myForm">
+    <div class="field-row row">
+      <mat-form-field appearance="outline" class="col col-8">
+        <mat-select placeholder="待关联实例" formControlName="instance">
+          <mat-option *ngFor="let item of instanceOption" [value]="item.id">{{item.name}}</mat-option>
+        </mat-select>
+        <mat-error *ngIf="myForm.get('instance').errors && myForm.get('instance').hasError('required')">选取关联实例为必填项！</mat-error>
+      </mat-form-field>
+    </div>
+    <div class="field-row row">
+      <mat-form-field appearance="outline" class="col col-8">
+        <mat-select placeholder="选择编排模版" formControlName="compose">
+          <mat-option *ngFor="let item of composeOption" [value]="item.id">{{item.name}}</mat-option>
+        </mat-select>
+        <mat-error *ngIf="myForm.get('compose').errors && myForm.get('compose').hasError('required')">编排模版为必填项！</mat-error>
+      </mat-form-field>
+    </div>
+    <div class="field-row row">
+      <mat-form-field appearance="outline" class="col col-8">
+        <input matInput placeholder="实例描述" formControlName="description" autocomplete="off">
+        <mat-error *ngIf="myForm.get('description').errors && myForm.get('description').hasError('required')">实例描述为必填项!</mat-error>
+      </mat-form-field>
+    </div>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-raised-button color="primary" type="submit" (click)="confirm()">关联</button>
+</mat-dialog-actions>

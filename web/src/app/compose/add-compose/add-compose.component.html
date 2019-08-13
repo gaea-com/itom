@@ -1,0 +1,63 @@
+<h2 mat-dialog-title class="pop-head">
+  {{action}}编排模版
+  <button mat-mini-fab mat-dialog-close class="float-right" color="accent">
+    <mat-icon>close</mat-icon>
+  </button>
+</h2>
+<mat-dialog-content>
+  <mat-progress-bar mode="indeterminate" *ngIf="!isShowForm"></mat-progress-bar>
+  <form (ngSubmit)="submitForm()" [formGroup]="myForm" *ngIf="isShowForm">
+    <div class="field-row row">
+      <mat-form-field appearance="outline" class="col col-6">
+        <input matInput placeholder="编排模版名称" formControlName="name" autocomplete="off">
+        <mat-error *ngIf="myForm.get('name').errors && myForm.get('name').hasError('required')">编排模版名称为必填项!</mat-error>
+      </mat-form-field>
+    </div>
+    <div class="field-row row row-group">
+      <mat-form-field appearance="outline" class="col col-6">
+        <textarea matInput placeholder="编排模版描述" formControlName="description" autocomplete="off"></textarea>
+      </mat-form-field>
+    </div>
+    <div formArrayName="imageList">
+      <div class="row image-list-title">
+        <div class="col col-6">镜像路径</div>
+        <div class="col col-4 float-right">容器暂停时间</div>
+      </div>
+      <div cdkDropList (cdkDropListDropped)="drop($event)" [cdkDropListData]="imageListControl.value">
+        <div *ngFor="let imageItem of imageListControl.controls; index as i"
+             [formGroupName]="i" cdkDrag [cdkDragData]="imageListControl.value[i]">
+            <div class="row compose-list">
+              <div class="field-row row-group col col-6">
+                <mat-form-field appearance="outline" class="w100">
+                  <input matInput placeholder="请填写镜像" formControlName="image_name" autocomplete="off">
+                  <mat-error *ngIf="imageItem.get('image_name').errors && imageItem.get('image_name').hasError('required')">镜像为必填项!</mat-error>
+                </mat-form-field>
+              </div>
+              <div class="field-row row-group col col-2">
+                <mat-form-field appearance="outline" class="w40">
+                  <input matInput type="number" formControlName="sleep_time" autocomplete="off">
+                </mat-form-field>
+              </div>
+              <div class="field-row row-group col col-4">
+                <button mat-icon-button (click)="addImageItem()"
+                        *ngIf="imageListControl.controls.length-1 == i" class="vb">
+                  <i class="material-icons">add</i>
+                </button>
+                <button mat-icon-button (click)="removeImageItem(i)" *ngIf="imageListControl.controls.length-1 != 0" class="fl vb">
+                  <i class="material-icons">clear</i>
+                </button>
+
+                <span class="vb" cdkDragHandle>
+                  <i class="material-icons">open_with</i>
+                </span>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-raised-button color="primary" type="submit" (click)="confirm()">提交</button>
+</mat-dialog-actions>

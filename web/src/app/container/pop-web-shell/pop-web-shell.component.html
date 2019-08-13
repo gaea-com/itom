@@ -1,0 +1,17 @@
+<h2 mat-dialog-title>
+  <button mat-mini-fab mat-dialog-close class="float-right" color="accent">
+    <mat-icon>close</mat-icon>
+  </button>
+</h2>
+<mat-dialog-content>
+  <div class="card p-3">
+    <div class="row">
+      <div class="col mt-3">
+        <mat-radio-group aria-label="Select an option" class="script-header" (change)="select($event)">
+          <mat-radio-button value='bash' class="mr-3">/bin/bash</mat-radio-button>
+          <mat-radio-button value='sh'>/bin/sh</mat-radio-button>
+        </mat-radio-group>
+      </div>
+    </div>
+  </div>
+</mat-dialog-content>

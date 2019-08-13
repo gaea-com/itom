@@ -1,0 +1,63 @@
+<mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+<div class="card w50" *ngIf="!loading && !status">
+  <div class="card-header">设置镜像仓库</div>
+  <div class="card-body">
+    <form [formGroup]="myForm">
+      <div class="field-row row">
+        <mat-form-field appearance="outline" class="col col-6">
+          <input matInput placeholder="镜像仓库地址" formControlName="address" autocomplete="off">
+          <mat-hint>仓库地址请以http或https开头，不能以/为结尾</mat-hint>
+          <mat-error *ngIf="myForm.get('address').errors && myForm.get('address').hasError('required')">镜像仓库地址为必填项!</mat-error>
+          <mat-error *ngIf="myForm.get('address').errors && myForm.get('address').hasError('pattern')">请输入正确的镜像仓库地址!</mat-error>
+        </mat-form-field>
+      </div>
+      <div class="field-row row">
+        <mat-form-field appearance="outline" class="col col-6">
+          <input matInput placeholder="用户名" formControlName="username" autocomplete="off">
+          <mat-error *ngIf="myForm.get('username').errors && myForm.get('username').hasError('required')">用户名为必填项!</mat-error>
+        </mat-form-field>
+      </div>
+      <div class="field-row row">
+        <mat-form-field appearance="outline" class="col col-6">
+          <input matInput placeholder="密码" formControlName="password" autocomplete="off">
+          <mat-error *ngIf="myForm.get('password').errors && myForm.get('password').hasError('required')">密码为必填项!</mat-error>
+        </mat-form-field>
+      </div>
+      <button mat-raised-button color="primary" (click)="test()" class="mr-3">测试</button>
+      <button mat-raised-button color="primary" (click)="submitForm()" [disabled]="canSave">提交</button>
+    </form>
+  </div>
+</div>
+<div class="card p-3 w50" *ngIf="!loading && status">
+  <form [formGroup]="searchForm" class="row">
+    <mat-form-field class="col col-6">
+      <input type="text" placeholder="请输入镜像名"
+             matInput formControlName="search">
+    </mat-form-field>
+    <div class="col col-6">
+      <button mat-raised-button color="primary" (click)="search()">查询</button>
+      <!--<button mat-raised-button color="primary" (click)="editHub()" class="ml-3">修改镜像仓库</button>-->
+    </div>
+  </form>
+  <div class="image-list-container" *ngIf="isSearching">
+    <mat-progress-bar mode="indeterminate" *ngIf="hubList.length == 0"></mat-progress-bar>
+    <div class="main-panel"
+         infiniteScroll
+         [infiniteScrollDistance]="1"
+         [infiniteScrollThrottle]="300"
+         (scrolled)="onScrollDown(hubList)"
+         [scrollWindow]="false">
+      <div *ngFor="let item of hubList; index as i;">
+        <div class="title">
+          <div class="float-left">
+          <mat-icon class="vb" (click)="getDetail(item)" *ngIf="!item.status">arrow_right</mat-icon>
+          <mat-icon class="vb" (click)="getDetail(item)" *ngIf="item.status">arrow_drop_down</mat-icon>
+          {{item.image}}
+          </div>
+        </div>
+
+        <app-setting-detail [image]="item.image" *ngIf="item.status"></app-setting-detail>
+      </div>
+    </div>
+  </div>
+</div>

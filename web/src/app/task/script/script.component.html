@@ -1,0 +1,69 @@
+<div class="create-btn">
+  <a class="btn btn-space btn-primary md-trigger" [routerLink]="['../scriptCreate']">创建命令</a>
+</div>
+<div class="card card-table w50">
+  <table mat-table
+         [dataSource]="dataSource" multiTemplateDataRows>
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef> 名称 </th>
+      <td mat-cell *matCellDef="let element">
+        <a [routerLink]="['../scriptEdit', element.params]" *ngIf="uid == element.userId">{{element.name}}</a>
+        <p *ngIf="uid != element.userId">{{element.name}}</p>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="description">
+      <th mat-header-cell *matHeaderCellDef> 描述 </th>
+      <td mat-cell *matCellDef="let element">{{element.description}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="type">
+      <th mat-header-cell *matHeaderCellDef> 类型 </th>
+      <td mat-cell *matCellDef="let element">{{element.type}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef> 类型 </th>
+      <td mat-cell *matCellDef="let element">{{element.status}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="userName">
+      <th mat-header-cell *matHeaderCellDef> 创建者 </th>
+      <td mat-cell *matCellDef="let element">{{element.userName}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="operate">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let element">
+        <button mat-icon-button color="primary" (click)="run(element)" [disabled]="!element.canRun">
+          <mat-icon>play_arrow</mat-icon>
+        </button>
+        <button mat-icon-button color="primary" (click)="delete(element)" [disabled]="uid != element.userId">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+    <ng-container matColumnDef="expandedDetail">
+      <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay.length">
+        <div class="example-element-detail"
+             [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+          <pre>{{element.script}}</pre>
+        </div>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+    <tr mat-row *matRowDef="let element; columns: columnsToDisplay;"
+        class="example-element-row"
+        [class.example-expanded-row]="expandedElement === element"
+        (click)="expandedElement = expandedElement === element ? null : element">
+    </tr>
+    <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+  </table>
+  <mat-paginator [length]="100"
+                 [pageSize]="10"
+                 [pageSizeOptions]="[5, 10, 25, 100]">
+  </mat-paginator>
+</div>

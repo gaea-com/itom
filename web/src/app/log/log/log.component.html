@@ -1,0 +1,102 @@
+<div class="card w50">
+  <div class="card-header">
+    <form [formGroup]="myForm">
+      <div class="row">
+        <div class="field-row col">
+          <mat-form-field appearance="outline" class="col-3">
+            <mat-select placeholder="日志分类" formControlName="type" (valueChange)="selectType($event)">
+              <mat-option value="instance">实例</mat-option>
+              <mat-option value="task">任务</mat-option>
+            </mat-select>
+            <mat-error *ngIf="myForm.get('type').errors && myForm.get('type').hasError('required')">日志分类为必填项！</mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row mt15">
+        <div class="field-row col">
+          <mat-form-field appearance="outline" class="col-3">
+            <mat-select placeholder="选择实例" formControlName="instance">
+              <mat-option value="">查询全部</mat-option>
+              <mat-option *ngFor="let item of instanceOption" [value]="item.id">{{item.name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="col-3" *ngIf="myForm.get('type').value == 'instance'">
+            <mat-select placeholder="操作者" formControlName="user">
+              <mat-option value="">查询全部</mat-option>
+              <mat-option *ngFor="let item of userOption" [value]="item.id">{{item.name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field class="col-6" *ngIf="myForm.get('type').value == 'task'">
+            <input placeholder="时间范围" matInput
+                   [owlDateTimeTrigger]="dt10"
+                   [owlDateTime]="dt10"
+                   formControlName="date"
+                   [selectMode]="'range'"
+                   autocomplete="off"
+                   [max]="nowDate">
+            <owl-date-time #dt10></owl-date-time>
+            <mat-hint>时间范围不能超过三天</mat-hint>
+          </mat-form-field>
+          <span class="col-3">
+            <button mat-raised-button color="primary" type="submit" (click)="submit()">提交</button>
+          </span>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="card-table">
+    <table mat-table [dataSource]="dataSource">
+      <!-- Checkbox Column -->
+      <ng-container matColumnDef="operate">
+        <th mat-header-cell *matHeaderCellDef> 操作类型 </th>
+        <td mat-cell *matCellDef="let element">
+          {{element.operate}}
+        </td>
+      </ng-container>
+
+      <!-- Position Column -->
+      <ng-container matColumnDef="taskId">
+        <th mat-header-cell *matHeaderCellDef> TaskId </th>
+        <td mat-cell *matCellDef="let element">{{element.taskId}}</td>
+      </ng-container>
+
+      <!-- Position Column -->
+      <ng-container matColumnDef="serverName">
+        <th mat-header-cell *matHeaderCellDef> 实例名称 </th>
+        <td mat-cell *matCellDef="let element">{{element.serverName}}</td>
+      </ng-container>
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="startTime">
+        <th mat-header-cell *matHeaderCellDef> 请求开始时间 </th>
+        <td mat-cell *matCellDef="let element"> {{element.startTime | date:'yyyy-MM-dd HH:mm'}} </td>
+      </ng-container>
+
+      <!-- Weight Column -->
+      <ng-container matColumnDef="endTime">
+        <th mat-header-cell *matHeaderCellDef> 请求结束时间 </th>
+        <td mat-cell *matCellDef="let element">{{element.endTime | date:'yyyy-MM-dd HH:mm'}}</td>
+      </ng-container>
+
+      <!-- Symbol Column -->
+      <ng-container matColumnDef="userName">
+        <th mat-header-cell *matHeaderCellDef> 用户名 </th>
+        <td mat-cell *matCellDef="let element"> {{element.userName}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="detail">
+        <th mat-header-cell *matHeaderCellDef>  </th>
+        <td mat-cell *matCellDef="let element"><button mat-button color="primary" (click)="checkDetail(element)">查看详情</button></td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+      </tr>
+    </table>
+    <mat-paginator [length]="length"
+                   [pageSize]="pageSize"
+                   [pageSizeOptions]="pageSizeOptions"
+                   (page)="getNext($event)">
+    </mat-paginator>
+  </div>
+</div>

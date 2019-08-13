@@ -1,0 +1,43 @@
+<mat-accordion>
+  <mat-expansion-panel class="m-1">
+    <mat-expansion-panel-header disabled>
+      <mat-panel-title>添加实例组</mat-panel-title>
+    </mat-expansion-panel-header>
+    <form [formGroup]="addForm">
+      <mat-form-field>
+        <input matInput placeholder="请输入实例组名称" autocomplete="off" formControlName="groupName">
+        <mat-error *ngIf="addForm.get('groupName').errors && addForm.get('groupName').hasError('required')">实例组名称为必填项!</mat-error>
+      </mat-form-field>
+    </form>
+    <button mat-raised-button color="primary" (click)="addGroup()">创建</button>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel class="m-1">
+    <mat-expansion-panel-header disabled>
+      <mat-panel-title>导入实例</mat-panel-title>
+    </mat-expansion-panel-header>
+    <form class="pop" [formGroup]="importForm">
+      <div class="file-input">
+        <input #File class="none" id="input-file-id" multiple type="file" accept=".csv" (change)="chooseFile()"/>
+        <mat-form-field class="w-75">
+          <input matInput placeholder="请选择文件导入实例"
+                 formControlName="choose_file"
+                 autocomplete="off"
+                 readonly matTooltip="只能上传csv文件 格式:  实例名称、服务器类型（gaea）、描述、internal_ip、public_ip、cpu数、内存数、磁盘大小">
+        </mat-form-field>
+        <label for="input-file-id" class="mat-mini-fab" (click)="chooseFile()">
+          <i class="material-icons mt7">folder</i>
+        </label>
+      </div>
+      <mat-progress-bar mode="determinate" value="{{uploadProgress}}" class="mt35" *ngIf="uploadingProgressing"></mat-progress-bar>
+    </form>
+    <button mat-raised-button color="primary" (click)="submitUpload()">导入</button>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel (click)="createCompose();" class="m-1" hideToggle>
+    <mat-expansion-panel-header>
+      <mat-panel-title>添加编排模版</mat-panel-title>
+    </mat-expansion-panel-header>
+  </mat-expansion-panel>
+
+</mat-accordion>

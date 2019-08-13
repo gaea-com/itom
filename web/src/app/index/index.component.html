@@ -1,0 +1,80 @@
+<mat-sidenav-container class="example-container">
+  <mat-sidenav #sidenav mode="side" [(opened)]="opened" class="left-sidebar">
+      <ul class="nav-index">
+        <li class="fir-node" *ngIf="role">
+          <mat-accordion>
+            <mat-expansion-panel class="nav-expend">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  <i class="material-icons vt">arrow_right</i>
+                  基础管理
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <ul class="child-box">
+                <li [ngClass]="getClass('account')">
+                  <a [routerLink]="['account']">
+                    <i class="material-icons vt">arrow_right</i>
+                    账户管理
+                  </a>
+                </li>
+                <li [ngClass]="getClass('perm')">
+                  <a [routerLink]="['perm']">
+                    <i class="material-icons vt">arrow_right</i>
+                    项目授权
+                  </a>
+                </li>
+                <li [ngClass]="getClass('setting')">
+                  <a [routerLink]="['setting']">
+                    <i class="material-icons vt">arrow_right</i>
+                    镜像仓库管理
+                  </a>
+                </li>
+              </ul>
+            </mat-expansion-panel>
+          </mat-accordion>
+          <!--<a [routerLink]="['setting']">-->
+            <!--<i class="material-icons vt">arrow_right</i>-->
+            <!--基础管理-->
+          <!--</a>-->
+        </li>
+        <li [ngClass]="getClass('projectList')">
+          <a [routerLink]="['projectList']">
+            <i class="material-icons vt">arrow_right</i>
+            项目模块
+          </a>
+        </li>
+        <!--<li>-->
+          <!--<a (click)="createTab()">-->
+            <!--<i class="material-icons vt">arrow_right</i>-->
+            <!--登陆SSH-->
+          <!--</a>-->
+        <!--</li>-->
+        <li class="col-end">
+          <button *ngIf="opened" class="side-btn ml-lg-1" (click)="sideBar()">
+            <i class="material-icons">first_page</i>
+          </button>
+        </li>
+      </ul>
+  </mat-sidenav>
+
+  <mat-sidenav-content class="example-content">
+    <button *ngIf="!opened" class="side-btn side-btn-right" (click)="sideBar()">
+      <i class="material-icons">last_page</i>
+    </button>
+    <div class="page-head">
+      <h2 class="page-head-title">{{title}}</h2>
+
+      <nav aria-label="breadcrumb" role="navigation">
+        <ol class="breadcrumb page-head-nav">
+          <li class="breadcrumb-item"><a [routerLink]="['/']">Home</a></li>
+          <li class="breadcrumb-item" *ngFor="let item of breadcrumbs">
+            <a [routerLink]="item.link" >{{item.title}}</a>
+          </li>
+        </ol>
+      </nav>
+    </div>
+    <div class="main-content container-fluid">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

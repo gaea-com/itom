@@ -1,0 +1,42 @@
+<h2 mat-dialog-title class="pop-head">
+  {{action}}用户
+  <button mat-mini-fab mat-dialog-close class="float-right" color="accent">
+    <i class="material-icons mt0">close</i>
+  </button>
+</h2>
+<mat-dialog-content>
+  <div class="card p-3" *ngIf="!isShowResult">
+    <form [formGroup]="myForm">
+      <div class="field-row row">
+        <mat-form-field appearance="outline" class="col col-6">
+          <input matInput placeholder="用户名" formControlName="name" autocomplete="off">
+          <mat-error *ngIf="myForm.get('name').errors && myForm.get('name').hasError('required')">用户名为必填项!</mat-error>
+        </mat-form-field>
+      </div>
+      <div class="field-row row" *ngIf="userId">
+        <mat-form-field appearance="outline" class="col col-6">
+          <mat-select placeholder="用户状态" formControlName="status">
+            <mat-option *ngFor="let status of statusList" [value]="status.value">{{status.name}}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="myForm.get('status').errors && myForm.get('status').hasError('required')">用户状态为必填项!</mat-error>
+        </mat-form-field>
+      </div>
+      <div class="field-row row">
+        <mat-form-field appearance="outline" class="col col-6">
+          <mat-select placeholder="用户角色" formControlName="role">
+            <mat-option *ngFor="let role of roleList" [value]="role">{{role}}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="myForm.get('role').errors && myForm.get('role').hasError('required')">用户角色为必填项!</mat-error>
+        </mat-form-field>
+      </div>
+
+    </form>
+  </div>
+  <div *ngIf="isShowResult">
+    <p class="title">账户创建成功!初始化密码{{password}}</p>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-raised-button color="primary" (click)="submitForm()" *ngIf="!isShowResult">提交</button>
+  <button mat-raised-button color="primary" mat-dialog-close *ngIf="isShowResult">关闭</button>
+</mat-dialog-actions>

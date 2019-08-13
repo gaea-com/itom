@@ -1,0 +1,139 @@
+openapi: 3.0.0
+info:
+  title: itom-api
+  description: itom 批量管理容器接口
+  version: 1.0.0
+servers:
+  - url: http://itom-test.gaeamobile-inc.net
+    description: 测试服务服接口
+    variables:
+      port:
+        enum:
+          - '8000'
+        default: '8000'
+paths:
+  /docker_download:
+    get:
+      tags:
+        - 容器文件传输
+      summary: 下载指定容器内的指定文件
+      description: 下载指定容器内的指定文件或者目录(需要填写全路径)
+      parameters:
+        - name: target_ip
+          in: query
+          required: true
+          description: 容器所在的实例 IP 地址
+          schema:
+            type : string
+        - name: target_port
+          in: query
+          required: true
+          description: 容器所开放的端口
+          schema:
+            type : string
+        - name: container_id
+          in: query
+          required: true
+          description: 容器ID
+          schema:
+            type : string
+        - name: path
+          in: query
+          required: true
+          description: 容器内，需要下载的文件或目录的全路径地址
+          schema:
+            type : string
+      responses:
+        '200':    # status code
+          description: 文件内容
+  /docker_upload:
+    post:
+      tags:
+        - 容器文件传输
+      summary: 文件上传
+      description: 上传指定文件至容器内的指定路径下(需要填写全路径)
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                target_ip:
+                  type: string
+                  description: 容器所在的实例 IP 地址
+                target_port:
+                  type: string
+                  description: 容器所开放的端口
+                container_id:
+                  type: string
+                  description: 容器ID
+                path:
+                  type: string
+                  description: 容器内，需要下载的文件或目录的全路径地址
+                file:
+                  type: string
+                  format: binary
+                  description: 所要上传的文件内容
+      responses:
+        '200':    # status code
+          description: 文件内容
+        '400':
+          description: 请求参数错误
+          content:
+            application/json:
+              schema:
+                type: string
+                example: {"error": "file 为空"}
+  /instance_file:
+    get:
+      tags:
+        - 实例文件传输
+      summary: 下载指定实例内的指定文件
+      description: 下载指定实例内的指定文件(需要填写全路径)
+      parameters:
+        - name: ip
+          in: query
+          required: true
+          description: 实例 IP 地址
+          schema:
+            type: string
+        - name: path
+          in: query
+          required: true
+          description: 需要下载的文件的全路径地址
+          schema:
+            type: string
+      responses:
+        '200':    # status code
+          description: 文件内容
+    post:
+      tags:
+        - 实例文件传输
+      summary: 文件上传
+      description: 上传指定文件至实例内的指定路径下(需要填写全路径)
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                ip:
+                  type: string
+                  description: 实例 IP 地址
+                path:
+                  type: string
+                  description: 需要文件上传至实例的全路径地址
+                file:
+                  type: string
+                  format: binary
+                  description: 所要上传的文件内容
+      responses:
+        '200':    # status code
+          description: 文件内容
+        '400':
+          description: 请求参数错误
+          content:
+            application/json:
+              schema:
+                type: string
+                example: {"message": "file 为空"}

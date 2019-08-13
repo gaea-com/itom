@@ -1,0 +1,41 @@
+<!--<script src="task-item.component.ts"></script>-->
+<ng-container [formGroup]="myForm">
+  <p class="notice" *ngIf="scriptOption.length == 0">暂无命令，立即<a [routerLink]="['../scriptCreate']">创建命令</a></p>
+  <div class="row field-row">
+    <mat-form-field class="col col-6" appearance="outline">
+      <mat-label>请选择命令</mat-label>
+      <mat-select formControlName="script">
+        <mat-option *ngFor="let item of scriptOption" [value]="item">
+          {{item.name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <div class="row field-row">
+    <mat-radio-group aria-label="Select an option" formControlName="itemType" (change)="selectItemType($event)">
+      <mat-radio-button value=0 class="type-item mr-3">全选</mat-radio-button>
+      <mat-radio-button value=1 class="type-item mr-3">通过实例组添加{{action}}</mat-radio-button>
+      <mat-radio-button value=2 class="type-item mr-3">任选若干{{action}}</mat-radio-button>
+      <mat-radio-button value=3 class="type-item">选择{{action}}自定义组</mat-radio-button>
+    </mat-radio-group>
+  </div>
+
+  <mat-progress-bar mode="indeterminate" *ngIf="(myForm.get('itemType').value == 1 && !isShowForm) ||
+   (myForm.get('itemType').value == 2 && !isShowForm)"></mat-progress-bar>
+  <app-select-group
+    *ngIf="myForm.get('itemType').value == 1 && isShowForm"
+    [fromOption]="fromOption"
+    [toOption]="toOption"
+    [option]="[]" [pid]="pid"
+    [myForm]="myForm"></app-select-group>
+  <app-select-group
+    *ngIf="myForm.get('itemType').value == 2 && isShowForm"
+    [fromOption]="fromOption"
+    [toOption]="toOption"
+    [option]="[]" [pid]="pid"
+    [myForm]="myForm"></app-select-group>
+  <app-task-item-for-customer-group
+    *ngIf="myForm.get('itemType').value == 3" [status]="status"
+    [pid]="pid" [type]="type" [defaultValue]="defaultValue"
+    [myForm]="myForm"></app-task-item-for-customer-group>
+</ng-container>

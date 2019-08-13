@@ -1,0 +1,42 @@
+system:
+  # itom 监听地址
+  host: "0.0.0.0"
+
+  # itom 监听端口
+  port: 8000
+
+  # 日志输出位置
+  log: /dev/stdout
+
+  # 计算唯一ID时的起始日期(生产环境中，一旦设定，请不要随意更改，否则有可能导致唯一Id重复)
+  startTime: "2019-06-01 00:00:00"
+
+  # 机器Id，计算唯一ID 时用到的ID数字，请务必保证该ID全局唯一，且不可重复
+  machineID: 1
+
+  # 临时文件中转路径(容器上传时，本地存放的临时路径)
+  tempDir: /tmp
+
+cache:
+
+  # redis 服务的地址
+  addr: "127.0.0.1:6379"
+
+  # redis 服务的连接密码
+  password: ""
+
+  # redis 读写数据的 db 名称
+  db: 0
+
+  # redis 创建连接池的大小
+  poolSize: 100
+
+  # itom 读取任务的 key 值
+  itomTaskKey: "itom_batch_task"
+
+  # itom ansible 任务处理的 key 值
+  # 这块的设置，请保持与 python-itom-task 中的 TASK_KEY 配置保持一致
+  itomAnsibleTaskKey: "itom_ansible_task"
+
+  # itomRegistryKey 镜像仓库认证的配置信息
+  itomRegistryKey: "hubImageInfo"
