@@ -5,7 +5,7 @@
 # 系统说明
 itom 是一套基于容器的运维管理系统，面向由服务器初步向容器迁移过渡的个人或中小型企业，适用于对容器的简单部署、运行和管理。
 
-可以满足以下需要：  
+可以满足以下需要：
 - 自动拉取公共镜像仓库或私有仓库的镜像到本地服务器
      
 - 易用的编排模板和环境变量设置、宿主机管理和容器管理
@@ -15,14 +15,15 @@ itom 是一套基于容器的运维管理系统，面向由服务器初步向容
 ## 快速部署
 
 环境需求：  
-ubuntu 18.04/macOS Mojave 10.14.6
+  
+&nbsp;&nbsp;&nbsp;&nbsp;ubuntu 18.04/macOS Mojave 10.14.6  
 
-docker-ce version 19.03+
+&nbsp;&nbsp;&nbsp;&nbsp;docker-ce version 19.03+  
 
-docker-compose 1.24.1
+&nbsp;&nbsp;&nbsp;&nbsp;docker-compose 1.24.1  
             
-以上环境已测试
-            
+&nbsp;&nbsp;&nbsp;&nbsp;以上环境已测试，docker-compose低于此版本有可能导致yml文件格式不支持。
+
 ### 方式一:docker compose
    
 如果ubuntu自带docker版本较低，请根据此链接进行更新：
@@ -40,13 +41,9 @@ chmod +x /usr/local/bin/docker-compose
 
 阿里云镜像仓库地址：<https://registry.cn-beijing.aliyuncs.com/gaea-com/itom> (待上传)
    
-启动容器：
-
-在itom根目录下执行：
-
-docker-compose up -d
+启动容器：在itom根目录下执行 docker-compose up -d
   
-### 方式二:常规服务器部署
+### 方式二:常规服务器部署（待完善）
    
 **运行前请检查app/upload和app/script/log目录以及可读写权限**
    
