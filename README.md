@@ -43,9 +43,13 @@ chmod +x /usr/local/bin/docker-compose
    
 启动容器：在itom根目录下执行 docker-compose up -d
   
-### 方式二:常规服务器部署（待完善）
-   
-**运行前请检查app/upload和app/script/log目录以及可读写权限**
+### 方式二:常规服务器部署
+
+待完善
+
+### 部署注意事项
+
+**运行前请检查是否创建app/upload和app/script/log目录以及可读写权限**
    
 ##  系统相关文档
   使用教程:[视频地址](https://bilibili.com/video/xxxxxx)
