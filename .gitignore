@@ -5,6 +5,7 @@
 app/.DS_Store
 app/api/.DS_Store
 docker/db/data/
+docker/redis/data/
 go-itom-api/.DS_Store
 go-itom-api/*.log
 go-itom-api/dist
@@ -12,7 +13,7 @@ python-itom-task/.DS_Store
 python-itom-task/venv/
 *.pyc
 *.log
-
+*.rdb
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
 # compiled output
