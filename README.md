@@ -37,11 +37,7 @@ curl -L https://github.com/docker/compose/releases/download/1.24.1/docker-compos
 chmod +x /usr/local/bin/docker-compose
 ```
    
-如果不能直通外网，可以使用itom已经build好的镜像，全部下载后启动即可。
-
-阿里云镜像仓库地址：
-
-阿里云镜像仓库：
+如果不能直通外网，可以使用itom已经build好的镜像，全部下载后启动即可，镜像保存在阿里云镜像仓库。
 
 请将项目根目录下的docker-compose.yml文件中的镜像进行修改
 
@@ -64,8 +60,6 @@ service python-itomtask的image：<https://registry.cn-hangzhou.aliyuncs.com/gae
 service go-itomapi的image：<https://registry.cn-hangzhou.aliyuncs.com/gaea-com/itom:go-api_v1.0>
 
 service go-itomtask的image：<https://registry.cn-hangzhou.aliyuncs.com/gaea-com/itom:go-task_v1.0>
-
-也可以自己提前docker pull 以上镜像
 
 启动容器：在itom根目录下执行 docker-compose up -d
    
