@@ -68,8 +68,6 @@ service go-itomtask的image：<https://registry.cn-hangzhou.aliyuncs.com/gaea-co
    
 ##  系统相关文档
   使用教程:[视频地址](https://bilibili.com/video/xxxxxx)
-  
-  请查看doc目录(待补充)  
    
 ##  License 
   GPLv3
