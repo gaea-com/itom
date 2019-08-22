@@ -39,7 +39,8 @@ chmod +x /usr/local/bin/docker-compose
    
 如果不能直通外网，可以使用itom已经build好的镜像，全部下载后启动即可。
 
-阿里云镜像仓库地址：<https://registry.cn-beijing.aliyuncs.com/gaea-com/itom> (待上传)
+阿里云镜像仓库地址：
+<https://registry.cn-beijing.aliyuncs.com/gaea-com/itom:>
    
 启动容器：在itom根目录下执行 docker-compose up -d
   
