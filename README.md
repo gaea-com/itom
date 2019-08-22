@@ -18,7 +18,7 @@ itom 是一套基于容器的运维管理系统，面向由服务器初步向容
   
 &nbsp;&nbsp;&nbsp;&nbsp;ubuntu 18.04/macOS Mojave 10.14.6  
 
-&nbsp;&nbsp;&nbsp;&nbsp;docker-ce version 19.03+  
+&nbsp;&nbsp;&nbsp;&nbsp;docker-ce version 19.03+  (确认docker engine server和client均是此版本)  
 
 &nbsp;&nbsp;&nbsp;&nbsp;docker-compose 1.24.1  
             
@@ -40,17 +40,37 @@ chmod +x /usr/local/bin/docker-compose
 如果不能直通外网，可以使用itom已经build好的镜像，全部下载后启动即可。
 
 阿里云镜像仓库地址：
-<https://registry.cn-beijing.aliyuncs.com/gaea-com/itom:>
-   
+
+阿里云镜像仓库：
+
+请将项目根目录下的docker-compose.yml文件中的镜像进行修改
+
+service web的image：<https://registry.cn-hangzhou.aliyuncs.com/gaea-com/itom:web_v1.0>
+
+service php的image：<https://registry.cn-hangzhou.aliyuncs.com/gaea-com/itom:php_v1.0>
+
+service rabbitmq的image：<https://registry.cn-hangzhou.aliyuncs.com/gaea-com/itom:mq_v1.0>
+
+service db的image：<https://registry.cn-hangzhou.aliyuncs.com/gaea-com/itom:db_v1.0>
+
+service console的image：<https://registry.cn-hangzhou.aliyuncs.com/gaea-com/itom:console_v1.0>
+
+service wsserver的image：<https://registry.cn-hangzhou.aliyuncs.com/gaea-com/itom:ws_v1.0>
+
+service redis的image：<https://registry.cn-hangzhou.aliyuncs.com/gaea-com/itom:redis_v1.0>
+
+service python-itomtask的image：<https://registry.cn-hangzhou.aliyuncs.com/gaea-com/itom:py-task_v1.0>
+
+service go-itomapi的image：<https://registry.cn-hangzhou.aliyuncs.com/gaea-com/itom:go-api_v1.0>
+
+service go-itomtask的image：<https://registry.cn-hangzhou.aliyuncs.com/gaea-com/itom:go-task_v1.0>
+
+也可以自己提前docker pull 以上镜像
+
 启动容器：在itom根目录下执行 docker-compose up -d
-  
-### 方式二:常规服务器部署
+   
+**运行前请检查app/upload和app/script/log目录以及可读写权限**
 
-待完善
-
-### 部署注意事项
-
-**运行前请检查是否创建app/upload和app/script/log目录以及可读写权限**
    
 ##  系统相关文档
   使用教程:[视频地址](https://bilibili.com/video/xxxxxx)
