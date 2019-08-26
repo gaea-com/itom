@@ -361,7 +361,7 @@ class InstancemqworkerController extends CliBase
                     ).PHP_EOL;
                     if ($res['status'] == 200) {
                         $success += 1;
-                        $sendMsg = $data['id'].'导入成功';
+                        $sendMsg = $data['instance'].'导入成功';
                         $this->senderMsgByWs(
                             200,
                             $sendMsg,
@@ -370,7 +370,7 @@ class InstancemqworkerController extends CliBase
                         );
                     } else {
                         $error    += 1;
-                        $sendMsg = $data['id'].'导入失败：'.$res['errorMsg'];
+                        $sendMsg = $data['instance'].'导入失败：'.$res['errorMsg'];
                         $this->senderMsgByWs(
                             400,
                             $sendMsg,
@@ -407,7 +407,7 @@ class InstancemqworkerController extends CliBase
                     $instance,
                     $info['user_id'],
                     $info['data'],
-                    $push_data,
+                    $totle,
                     '批量导入实例',
                     $cloud_type
                 );
