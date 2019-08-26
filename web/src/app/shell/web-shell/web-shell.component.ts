@@ -14,9 +14,11 @@ export class WebShellComponent implements OnInit {
   socket:any;
   xterm:any;
   height:string;
-
+  public url:string;
   constructor(private route:ActivatedRoute,
-              public tools:ToolsService) {
+              public tools:ToolsService,
+              @Inject(DOCUMENT) private document: any) {
+    this.url = 'ws://' + this.document.location.hostname;
     this.route.params.subscribe( params => {
       if(params.params){
         this.tools.parseParams(params.params, (obj) => {
@@ -41,7 +43,7 @@ export class WebShellComponent implements OnInit {
     this.xterm.open(document.getElementById('webShellWrapper'));
     fit(this.xterm);
 
-    let url = 'ws://itom-test.gaeamobile-inc.net/ws?' +
+    let url = this.url + '/ws?' +
               '&target_ip=' + params.target_ip +
               '&target_port='+ params.target_port +
               '&container_id='+ params.container_id +
